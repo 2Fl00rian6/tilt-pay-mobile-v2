@@ -1,17 +1,18 @@
-import React, { useRef, useEffect } from 'react'
+import * as Haptics from 'expo-haptics'
+import { useEffect, useRef } from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
   Animated,
   Easing,
   Share,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Path, Rect, Svg } from 'react-native-svg'
 import HeaderBar from '../components/HeaderBar'
-import * as Haptics from 'expo-haptics'
-import { Svg, Path, Rect } from 'react-native-svg'
+import { useRouter } from 'expo-router'
 
 const IconCopy = ({ size = 20, color = '#fff' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -25,10 +26,11 @@ const IconCopy = ({ size = 20, color = '#fff' }) => (
 )
 
 export default function ReceiveTagScreen({ navigation, route }) {
-  const userTag = route?.params?.tag || 'elliot.boyer' // Le tag de l'utilisateur connecté
+  const userTag = route?.params?.tag // Le tag de l'utilisateur connecté
 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const translateY = useRef(new Animated.Value(30)).current
+  const router = useRouter()
 
   useEffect(() => {
     Animated.parallel([
@@ -73,7 +75,7 @@ export default function ReceiveTagScreen({ navigation, route }) {
 
   const handleBack = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.goBack()
+    router.back()
   }
 
   return (

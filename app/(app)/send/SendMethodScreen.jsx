@@ -7,17 +7,24 @@ import {
   StyleSheet,
   Animated,
   Easing,
+  Alert
 } from 'react-native'
+import { useRouter, useLocalSearchParams } from 'expo-router' // <--- 1. Import des hooks Expo Router
 import HeaderBar from '../../../components/HeaderBar'
 import * as Haptics from 'expo-haptics'
 
 /* ---------- Icônes SVG ---------- */
+// Assure-toi que metro.config.js est bien configuré pour les SVGs
 import IconTag from '../../../assets/icon-user.svg'
 import IconNfc from '../../../assets/icon-nfc.svg'
 import IconBank from '../../../assets/icon-bank.svg'
 
-export default function SendMethodScreen({ navigation, route }) {
-  const amount = route?.params?.amount
+export default function SendMethodScreen() {
+  const router = useRouter() // <--- 2. Initialisation du router
+  const params = useLocalSearchParams() // <--- 3. Récupération des paramètres
+  
+  // On récupère le montant (peut être une string ou undefined selon d'où on vient)
+  const amount = params.amount 
 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const translateY = useRef(new Animated.Value(30)).current
@@ -52,26 +59,39 @@ export default function SendMethodScreen({ navigation, route }) {
 
   const goBack = async () => {
     await vibrate()
-    navigation.goBack()
+    router.back() // <--- Correction ici
   }
 
   const goTag = async () => {
     await vibrate()
-    navigation.navigate('SendTag', { amount })
+    // Redirection vers l'écran Tag
+    router.push({
+      pathname: '/send/SendTagScreen',
+      params: { amount }
+    })
   }
 
   const goTapToPay = async () => {
     await vibrate()
-    if (typeof amount === 'number') {
-      navigation.navigate('SendTapToPay', { amount, currency: 'EUR' })
+    if (amount) {
+      router.push({
+        pathname: '/send/SendTapToPayScreen',
+        params: { amount, currency: 'EUR' }
+      })
     } else {
-      navigation.navigate('SendEnterAmount')
+      // Si pas de montant, on renvoie vers la saisie du montant
+      router.push('/send/SendEnterAmountScreen')
     }
   }
 
   const goBank = async () => {
     await vibrate()
-    navigation.navigate('SendBankTransfer', { amount })
+    // Attention : Vérifie que ce fichier existe bien, je ne l'ai pas vu dans ta liste !
+    // Si tu ne l'as pas encore créé, cela ne marchera pas.
+    router.push({
+      pathname: '/send/SendBankTransferScreen', // Adapte le nom si besoin
+      params: { amount }
+    })
   }
 
   return (
@@ -89,14 +109,9 @@ export default function SendMethodScreen({ navigation, route }) {
         <Animated.View
           style={{
             opacity: item1,
-            transform: [
-              {
-                translateY: item1.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [20, 0],
-                }),
-              },
-            ],
+            transform: [{
+                translateY: item1.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }),
+            }],
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goTag} activeOpacity={0.85}>
@@ -108,14 +123,9 @@ export default function SendMethodScreen({ navigation, route }) {
         <Animated.View
           style={{
             opacity: item2,
-            transform: [
-              {
-                translateY: item2.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [20, 0],
-                }),
-              },
-            ],
+            transform: [{
+                translateY: item2.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }),
+            }],
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goTapToPay} activeOpacity={0.85}>
@@ -127,14 +137,9 @@ export default function SendMethodScreen({ navigation, route }) {
         <Animated.View
           style={{
             opacity: item3,
-            transform: [
-              {
-                translateY: item3.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [20, 0],
-                }),
-              },
-            ],
+            transform: [{
+                translateY: item3.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }),
+            }],
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goBank} activeOpacity={0.85}>
@@ -164,7 +169,7 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingHorizontal: 20,
     paddingVertical: 14,
-    backgroundColor: 'transparent',
+    backgroundColor: '#F9FAFB', // <--- Changé 'transparent' pour voir le bouton
     borderRadius: 14,
     marginHorizontal: 16,
     marginBottom: 14,

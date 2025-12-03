@@ -1,20 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react'
+import * as Haptics from 'expo-haptics'
+import { useEffect, useRef, useState } from 'react'
 import {
-  View,
+  ActivityIndicator,
+  Animated,
+  Easing,
+  FlatList,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  Animated,
-  Easing,
-  ActivityIndicator,
+  View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import HeaderBar from '../components/HeaderBar'
-import * as Haptics from 'expo-haptics'
-import { Svg, Path, Circle } from 'react-native-svg'
+import { Circle, Path, Svg } from 'react-native-svg'
 import { getUsers } from '../api/users'
+import HeaderBar from '../components/HeaderBar'
+import { useRouter } from 'expo-router'
 
 const IconSearch = ({ size = 20, color = '#6B7280' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -29,6 +30,7 @@ export default function SendTagScreen({ navigation }) {
   const [filteredUsers, setFilteredUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const router = useRouter()
 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const translateY = useRef(new Animated.Value(30)).current
@@ -95,7 +97,7 @@ export default function SendTagScreen({ navigation }) {
 
   const handleBack = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.goBack()
+    router.back()
   }
 
   const renderUser = ({ item }) => {

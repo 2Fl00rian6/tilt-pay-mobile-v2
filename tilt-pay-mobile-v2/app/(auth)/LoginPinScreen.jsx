@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import HeaderBar from '../components/HeaderBar';
-import PinDots from '../components/PinDots';
-import Keypad from '../components/Keypad';
-import { useError } from '../context/ErrorContext';
 import { login, me } from '../api/auth';
-import { setToken, setUser, setCurrentPhone } from '../utils/authStorage';
+import HeaderBar from '../components/HeaderBar';
+import Keypad from '../components/Keypad';
+import PinDots from '../components/PinDots';
+import { useError } from '../context/ErrorContext';
+import { setCurrentPhone, setToken, setUser } from '../utils/authStorage';
+import { useRouter } from 'expo-router'
 
 const PIN_LEN = 4;
 
 export default function LoginPinScreen({ route, navigation }) {
   const { showError } = useError();
+  const router = useRouter();
 
   const dialCode = route?.params?.dialCode || '+33';
   const nsn = route?.params?.nsn || '';
@@ -55,7 +57,7 @@ export default function LoginPinScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <HeaderBar title="" onBack={() => navigation.goBack()} />
+      <HeaderBar title="" onBack={() => router.back()} />
       <View style={styles.container}>
         <View style={styles.handleWrap}><View style={styles.handle} /></View>
 

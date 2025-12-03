@@ -1,22 +1,23 @@
-import React, { useEffect, useRef } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import * as Haptics from 'expo-haptics'
+import { useEffect, useRef } from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
   Animated,
   Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import HeaderBar from '../components/HeaderBar'
-import * as Haptics from 'expo-haptics'
+import { useRouter } from 'expo-router'
 
 /* ---------- Icônes SVG ---------- */
-import IconTag from '../assets/icon-user.svg'
-import IconNfc from '../assets/icon-nfc.svg'
 import IconBank from '../assets/icon-bank.svg'
+import IconNfc from '../assets/icon-nfc.svg'
+import IconTag from '../assets/icon-user.svg'
 
 export default function SendMethodScreen({ navigation, route }) {
+  const router = useRouter()
   const amount = route?.params?.amount
 
   const fadeAnim = useRef(new Animated.Value(0)).current
@@ -52,7 +53,7 @@ export default function SendMethodScreen({ navigation, route }) {
 
   const goBack = async () => {
     await vibrate()
-    navigation.goBack()
+    router.back()
   }
 
   const goTag = async () => {

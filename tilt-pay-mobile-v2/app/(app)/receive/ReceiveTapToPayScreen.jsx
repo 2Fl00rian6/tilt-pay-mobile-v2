@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import * as Haptics from 'expo-haptics'
+import { useState } from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  PermissionsAndroid,
-  Platform,
   Alert,
   Linking,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native'
+import { BleManager } from 'react-native-ble-plx'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import HeaderBar from '../components/HeaderBar'
-import * as Haptics from 'expo-haptics'
-import { BleManager } from 'react-native-ble-plx'
+import { useRouter } from 'expo-router'
 
 const manager = new BleManager()
 const SERVICE_UUID = '4fafc201-1fb5-459e-8fcc-c5c9c331914b'
@@ -20,6 +21,7 @@ const SERVICE_UUID = '4fafc201-1fb5-459e-8fcc-c5c9c331914b'
 export default function ReceiveTapToPayScreen({ navigation }) {
   const [scanning, setScanning] = useState(false)
   const [foundMsg, setFoundMsg] = useState(null)
+  const router = useRouter()
 
   const requestPermissions = async () => {
     if (Platform.OS !== 'android') return true
@@ -89,7 +91,7 @@ export default function ReceiveTapToPayScreen({ navigation }) {
 
   const handleBack = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.goBack()
+    router.back()
   }
 
   return (

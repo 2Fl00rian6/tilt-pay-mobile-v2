@@ -1,11 +1,13 @@
 // src/screens/ChooseTagScreen.jsx
-import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useMemo, useState } from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HeaderBar from '../components/HeaderBar';
 import { useError } from '../context/ErrorContext';
+import { useRouter } from 'expo-router'
 
 export default function ChooseTagScreen({ route, navigation }) {
+  const router = useRouter();
   const { showError } = useError();
 
   // Ces 2 params DOIVENT arriver depuis EnterPhoneScreen
@@ -48,7 +50,7 @@ export default function ChooseTagScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      <HeaderBar title="" onBack={() => navigation.goBack()} />
+      <HeaderBar title="" onBack={() => router.back()} />
       <View style={styles.container}>
         <View style={styles.handleWrap}><View style={styles.handle} /></View>
 

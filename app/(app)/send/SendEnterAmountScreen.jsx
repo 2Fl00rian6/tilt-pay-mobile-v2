@@ -12,6 +12,7 @@ import {
 import HeaderBar from '../../../components/HeaderBar'
 import { Svg, Path } from 'react-native-svg'
 import * as Haptics from 'expo-haptics'
+import { useRouter } from 'expo-router'
 
 const IconBackspace = ({ size = 22, color = '#111' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -81,6 +82,7 @@ export default function SendEnterAmountScreen({ route, navigation }) {
     if (currency === 'GBP') return '£'
     return '$'
   }, [currency])
+  const router = useRouter()
 
   const [val, setVal] = useState('0')
 
@@ -146,7 +148,7 @@ export default function SendEnterAmountScreen({ route, navigation }) {
 
   const handleBack = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.goBack()
+    router.back()
   }
 
   const handleContinue = async () => {
@@ -156,9 +158,9 @@ export default function SendEnterAmountScreen({ route, navigation }) {
     const tag = route?.params?.tag
 
     if (tag) {
-      navigation.navigate('ConfirmTagTransfer', { tag, amount: amountNumber, currency })
+      router.push('/(app)/send/ConfirmTagTransferScreen', { tag, amount: amountNumber, currency })
     } else {
-      navigation.navigate('SendTapToPay', { amount: amountNumber, currency })
+      router.push('/(app)/send/SendTapToPayScreen', { amount: amountNumber, currency })
     }
   }
   const rows = [

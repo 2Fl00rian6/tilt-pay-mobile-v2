@@ -1,17 +1,18 @@
-import React, { useMemo, useState, useRef, useEffect } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import * as Haptics from 'expo-haptics'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Pressable,
   Animated,
   Easing,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Path, Svg } from 'react-native-svg'
 import HeaderBar from '../components/HeaderBar'
-import { Svg, Path } from 'react-native-svg'
-import * as Haptics from 'expo-haptics'
+import { useRouter } from 'expo-router'
 
 const IconBackspace = ({ size = 22, color = '#111' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -75,6 +76,7 @@ function Key({ label, onPress }) {
 }
 
 export default function SendEnterAmountScreen({ route, navigation }) {
+  const router = useRouter()
   const currency = route?.params?.currency ?? 'USD'
   const currencySymbol = useMemo(() => {
     if (currency === 'EUR') return '€'
@@ -146,7 +148,7 @@ export default function SendEnterAmountScreen({ route, navigation }) {
 
   const handleBack = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.goBack()
+    router.back()
   }
 
   const handleContinue = async () => {

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router'; // <--- IMPORT IMPORTANT
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router'; // <--- IMPORT IMPORTANT
 
-import HeaderBar from '../../components/HeaderBar'; // Attention aux chemins relatifs (../..)
-import PinDots from '../../components/PinDots';
-import Keypad from '../../components/Keypad';
-import { useError } from '../../context/ErrorContext';
 import { login, me } from '../../api/auth';
-import { setToken, setUser, setCurrentPhone } from '../../utils/authStorage';
+import HeaderBar from '../../components/HeaderBar'; // Attention aux chemins relatifs (../..)
+import Keypad from '../../components/Keypad';
+import PinDots from '../../components/PinDots';
+import { useError } from '../../context/ErrorContext';
+import { setCurrentPhone, setToken, setUser } from '../../utils/authStorage';
 
 const PIN_LEN = 4;
 
@@ -63,7 +63,7 @@ export default function LoginPinScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* router.back() remplace navigation.goBack() */}
+      {/* router.back() remplace router.back() */}
       <HeaderBar title="" onBack={() => router.back()} />
       <View style={styles.container}>
         <View style={styles.handleWrap}><View style={styles.handle} /></View>

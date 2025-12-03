@@ -7,12 +7,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import HeaderBar from '../components/HeaderBar';
 import { useError } from '../context/ErrorContext';
 import { verifyAccount } from '../api/auth';
+import { useRouter } from 'expo-router'
 
 const CODE_LEN = 6;
 
 export default function VerifyCodeScreen({ route, navigation }) {
   const { showError } = useError();
   const inputRef = useRef(null);
+  const router = useRouter();
 
   const mode = route?.params?.mode || 'register';
   const dialCode = route?.params?.dialCode || '+33';

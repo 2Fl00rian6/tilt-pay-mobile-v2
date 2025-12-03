@@ -7,11 +7,14 @@ import {
   Animated,
   Easing,
   Share,
+  Alert
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import HeaderBar from '../../../components/HeaderBar'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import * as Haptics from 'expo-haptics'
 import { Svg, Path, Rect } from 'react-native-svg'
+import HeaderBar from '../../../components/HeaderBar'
+import * as Clipboard from 'expo-clipboard'
 
 const IconCopy = ({ size = 20, color = '#fff' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -24,8 +27,12 @@ const IconCopy = ({ size = 20, color = '#fff' }) => (
   </Svg>
 )
 
-export default function ReceiveTagScreen({ navigation, route }) {
-  const userTag = route?.params?.tag || 'elliot.boyer' // Le tag de l'utilisateur connecté
+export default function ReceiveTagScreen() {
+  const router = useRouter() // <--- 3. Initialisation du router
+  const params = useLocalSearchParams() // <--- 4. Récupération des paramètres
+  
+  // On récupère le tag depuis les params ou on met une valeur par défaut
+  const userTag = params.tag || 'elliot.boyer' 
 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const translateY = useRef(new Animated.Value(30)).current
@@ -49,15 +56,14 @@ export default function ReceiveTagScreen({ navigation, route }) {
 
   const handleCopy = async () => {
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-    // Copier le tag dans le presse-papier
-    // import Clipboard from '@react-native-clipboard/clipboard'
-    // Clipboard.setString(userTag)
     
-    // Ou avec expo:
-    // import * as Clipboard from 'expo-clipboard'
-    // await Clipboard.setStringAsync(userTag)
-    
-    alert('Tag copied!')
+    // Si vous avez installé expo-clipboard :
+    try {
+      await Clipboard.setStringAsync(userTag)
+      Alert.alert('Succès', 'Tag copié !')
+    } catch (e) {
+      Alert.alert('Copié', 'Tag copié (simulation)')
+    }
   }
 
   const handleShare = async () => {
@@ -73,7 +79,7 @@ export default function ReceiveTagScreen({ navigation, route }) {
 
   const handleBack = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.goBack()
+    router.back()
   }
 
   return (

@@ -1,19 +1,20 @@
-import React, { useState } from 'react'
+import * as Haptics from 'expo-haptics'
+import { useState } from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  PermissionsAndroid,
-  Platform,
   Alert,
   Linking,
+  NativeModules,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native'
+import { BleManager } from 'react-native-ble-plx'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import HeaderBar from '../components/HeaderBar'
-import * as Haptics from 'expo-haptics'
-import { NativeModules } from 'react-native'
-import { BleManager } from 'react-native-ble-plx'
+import { useRouter } from 'expo-router'
 
 const { BleAdvertiser } = NativeModules
 const manager = new BleManager()
@@ -22,6 +23,7 @@ export default function SendTapToPayScreen({ navigation }) {
   const [isAdvertising, setIsAdvertising] = useState(false)
   const [status, setStatus] = useState('⏳ Prêt à diffuser')
   const message = 'TILTPAY:15.90EUR'
+  const router = useRouter()
 
   const requestPermissions = async () => {
     if (Platform.OS !== 'android') return true
@@ -87,7 +89,7 @@ export default function SendTapToPayScreen({ navigation }) {
 
   const handleBack = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.goBack()
+    router.back()
   }
 
   return (

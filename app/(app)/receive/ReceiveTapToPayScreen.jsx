@@ -14,7 +14,7 @@ import { NativeModules } from 'react-native'
 
 export default function ReceiveTapToPayScreen({ navigation }) {
   return (
-    <h1>ReceiveTapToPay</h1>
+    <Text>ReceiveTapToPay</Text>
   )
 }
 

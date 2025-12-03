@@ -15,10 +15,11 @@ import HeaderBar from '../../../components/HeaderBar'
 import * as Haptics from 'expo-haptics'
 import { Svg, Path, Circle } from 'react-native-svg'
 import { getUsers } from '../../../api/users'
+import { useRouter } from 'expo-router'
 
 const IconSearch = ({ size = 20, color = '#6B7280' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <Circle cx="11" cy="11" r="7" stroke={color} strokeWidth="2" />
+    <Circle cx="11" cy="11" r="7" stro ke={color} strokeWidth="2" />
     <Path d="M20 20l-4-4" stroke={color} strokeWidth="2" strokeLinecap="round" />
   </Svg>
 )
@@ -29,6 +30,7 @@ export default function SendTagScreen({ navigation }) {
   const [filteredUsers, setFilteredUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const router = useRouter()
 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const translateY = useRef(new Animated.Value(30)).current
@@ -90,12 +92,12 @@ export default function SendTagScreen({ navigation }) {
   const handleSelectUser = async (tagname) => {
     if (!tagname) return
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.navigate('SendEnterAmount', { tag: tagname })
+    router.push('/(app)/send/SendEnterAmountScreen', { tag: tagname })
   }
 
   const handleBack = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.goBack()
+    router.back()
   }
 
   const renderUser = ({ item }) => {

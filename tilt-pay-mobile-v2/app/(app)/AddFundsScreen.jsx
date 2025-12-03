@@ -1,22 +1,28 @@
-import React, { useEffect, useRef } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
+import { useEffect, useRef } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
   Animated,
   Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
-import HeaderBar from '../components/HeaderBar';
-import * as Haptics from 'expo-haptics';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router'; // <--- 1. Import du Router
+
+// 2. Correction des chemins (on remonte de 2 niveaux : (app) -> app -> racine)
+import HeaderBar from '../../components/HeaderBar';
 
 /* ---------- Icônes SVG ---------- */
-import IconCard from '../assets/icon-credit-cart.svg';
-import IconBank from '../assets/icon-bank.svg';
-import IconCrypto from '../assets/icon-wallet.svg';
+import IconBank from '../../assets/icon-bank.svg';
+import IconCard from '../../assets/icon-credit-cart.svg';
+import IconCrypto from '../../assets/icon-wallet.svg';
 
-export default function AddFundsScreen({ navigation }) {
+export default function AddFundsScreen() {
+  // 3. On enlève { navigation } des props et on utilise le hook
+  const router = useRouter(); 
+
   /* ---------- Animations d'entrée ---------- */
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(30)).current;
@@ -53,27 +59,29 @@ export default function AddFundsScreen({ navigation }) {
   /* ---------- Navigation ---------- */
   const goBack = async () => {
     await animateTouch();
-    navigation.goBack();
+    router.back(); // <--- Correction ici
   };
 
-  const goCreditCard = () => {
-    animateTouch();
-    navigation.navigate('AddFundsCard');
+  const goCreditCard = async () => {
+    await animateTouch();
+    // Assurez-vous que ce fichier existe : app/(app)/AddFundsCardScreen.jsx
+    router.push('/AddFundsCardScreen'); 
   };
 
-  const goBank = () => {
-    animateTouch();
-    navigation.navigate('AddFundsBank');
+  const goBank = async () => {
+    await animateTouch();
+    // Assurez-vous que ce fichier existe : app/(app)/AddFundsBankScreen.jsx
+    router.push('/AddFundsBankScreen');
   };
 
-  const goCrypto = () => {
-    animateTouch();
-    navigation.navigate('AddFundsCrypto');
+  const goCrypto = async () => {
+    await animateTouch();
+    // Assurez-vous que ce fichier existe : app/(app)/AddFundsCryptoScreen.jsx
+    router.push('/AddFundsCryptoScreen');
   };
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      {/* Retour haptique ajouté ici */}
       <HeaderBar title="Add Funds" onBack={goBack} />
 
       <Animated.View
@@ -88,14 +96,9 @@ export default function AddFundsScreen({ navigation }) {
         <Animated.View
           style={{
             opacity: item1,
-            transform: [
-              {
-                translateY: item1.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [20, 0],
-                }),
-              },
-            ],
+            transform: [{
+                translateY: item1.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }),
+            }],
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goCreditCard} activeOpacity={0.85}>
@@ -108,14 +111,9 @@ export default function AddFundsScreen({ navigation }) {
         <Animated.View
           style={{
             opacity: item2,
-            transform: [
-              {
-                translateY: item2.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [20, 0],
-                }),
-              },
-            ],
+            transform: [{
+                translateY: item2.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }),
+            }],
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goBank} activeOpacity={0.85}>
@@ -128,14 +126,9 @@ export default function AddFundsScreen({ navigation }) {
         <Animated.View
           style={{
             opacity: item3,
-            transform: [
-              {
-                translateY: item3.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [20, 0],
-                }),
-              },
-            ],
+            transform: [{
+                translateY: item3.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }),
+            }],
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goCrypto} activeOpacity={0.85}>
@@ -166,7 +159,7 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingHorizontal: 20,
     paddingVertical: 14,
-    backgroundColor: 'transparent',
+    backgroundColor: '#F9FAFB', // <--- Changé 'transparent' pour voir le bouton
     borderRadius: 14,
     marginHorizontal: 16,
     marginBottom: 14,

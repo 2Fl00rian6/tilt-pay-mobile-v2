@@ -4,10 +4,10 @@ export default function HomeLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       {/* L'écran principal (ton Dashboard) */}
-        <Stack.Screen 
-            name="HomeScreen" 
+        <Stack.Screen
+            name="index"
             options={{ 
-                headerShown: true,
+                headerShown: false,
                 title: 'Home',
                 headerBackTitle: 'Retour'
             }}
@@ -17,7 +17,7 @@ export default function HomeLayout() {
       <Stack.Screen 
         name="AccountSettingsScreen" 
         options={{ 
-          headerShown: true, // On affiche le header (titre + flèche retour) pour cette page
+          headerShown: false, // On affiche le header (titre + flèche retour) pour cette page
           title: 'Mon Compte',
           headerBackTitle: 'Retour'
         }} 

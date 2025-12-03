@@ -1,17 +1,18 @@
-import React, { useRef, useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import * as Haptics from 'expo-haptics'
+import { useEffect, useRef, useState } from 'react'
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   Animated,
   Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native'
-import * as Haptics from 'expo-haptics'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Path, Svg } from 'react-native-svg'
 import HeaderBar from '../components/HeaderBar'
-import { Svg, Path } from 'react-native-svg'
 import { wipeAllLocalData } from '../utils/authStorage'
+import { useRouter } from 'expo-router'
 
 /* ---------- Icônes ---------- */
 const IconChat = ({ size = 20, color = '#111' }) => (
@@ -48,6 +49,7 @@ const IconLogout = ({ size = 20, color = '#111' }) => (
 export default function AccountSettingsScreen({ navigation }) {
   const fadeAnim = useRef(new Animated.Value(0)).current
   const [currency, setCurrency] = useState('USD')
+  const router = useRouter()
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -60,7 +62,7 @@ export default function AccountSettingsScreen({ navigation }) {
 
   const handleBack = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.goBack()
+    router.back()
   }
 
   const onLogout = async () => {

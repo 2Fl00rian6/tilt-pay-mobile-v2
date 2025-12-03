@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import HeaderBar from '../components/HeaderBar'
 import * as Haptics from 'expo-haptics'
+import { useRouter } from 'expo-router'
 
 import IconTag from '../assets/icon-user.svg'
 import IconNfc from '../assets/icon-nfc.svg'
@@ -18,6 +19,7 @@ export default function ReceiveSelectScreen({ navigation }) {
   const translateY = useRef(new Animated.Value(30)).current
   const item1 = useRef(new Animated.Value(0)).current
   const item2 = useRef(new Animated.Value(0)).current
+  const router = useRouter()
 
   useEffect(() => {
     Animated.parallel([
@@ -45,7 +47,7 @@ export default function ReceiveSelectScreen({ navigation }) {
 
   const goBack = async () => {
     await vibrate()
-    navigation.goBack()
+    router.back()
   }
 
   const goTag = async () => {
