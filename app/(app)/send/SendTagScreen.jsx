@@ -11,10 +11,10 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import HeaderBar from '../components/HeaderBar'
+import HeaderBar from '../../../components/HeaderBar'
 import * as Haptics from 'expo-haptics'
 import { Svg, Path, Circle } from 'react-native-svg'
-import { getUsers } from '../api/users'
+import { getUsers } from '../../../api/users'
 
 const IconSearch = ({ size = 20, color = '#6B7280' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">

@@ -8,13 +8,13 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import HeaderBar from '../components/HeaderBar';
+import HeaderBar from '../../components/HeaderBar';
 import * as Haptics from 'expo-haptics';
 
 /* ---------- Icônes SVG ---------- */
-import IconCard from '../assets/icon-credit-cart.svg';
-import IconBank from '../assets/icon-bank.svg';
-import IconCrypto from '../assets/icon-wallet.svg';
+import IconCard from '../../assets/icon-credit-cart.svg';
+import IconBank from '../../assets/icon-bank.svg';
+import IconCrypto from '../../assets/icon-wallet.svg';
 
 export default function AddFundsScreen({ navigation }) {
   /* ---------- Animations d'entrée ---------- */

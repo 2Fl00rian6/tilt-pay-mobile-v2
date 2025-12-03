@@ -5,10 +5,12 @@ import {
   TouchableWithoutFeedback, Keyboard, ActivityIndicator,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import HeaderBar from '../components/HeaderBar'
-import { useError } from '../context/ErrorContext'
-import { me } from '../api/auth'
-import { getToken, getUser } from '../utils/authStorage'
+import { useRouter } from 'expo-router' // <--- 1. IMPORT IMPORTANT
+
+import HeaderBar from '../../components/HeaderBar'
+import { useError } from '../../context/ErrorContext'
+import { me } from '../../api/auth'
+import { getToken, getUser } from '../../utils/authStorage'
 import allCountries from 'world-countries'
 
 const COUNTRIES = allCountries.map((c) => {
@@ -36,10 +38,8 @@ const COUNTRIES = allCountries.map((c) => {
 function formatNational(nsn, groups, countryCode) {
   if (!nsn) return ''
   if (countryCode === 'FR') {
-    // Toujours sans le 0
     let v = nsn.replace(/^0+/, '')
     if (!v) return ''
-    // Découpe en 5 groupes : 1 + 2 + 2 + 2 + 2
     const groupsFR = [1, 2, 2, 2, 2]
     const parts = []
     let i = 0
@@ -51,7 +51,6 @@ function formatNational(nsn, groups, countryCode) {
     return parts.join(' ')
   }
 
-  // Par défaut autres pays
   const out = []
   let i = 0
   for (const g of groups) {
@@ -170,7 +169,9 @@ function awaitKeyboardHide() {
   })
 }
 
-export default function EnterPhoneScreen({ navigation }) {
+// 2. On retire { navigation } des props car il n'est plus passé automatiquement
+export default function EnterPhoneScreen() { 
+  const router = useRouter() // <--- 3. INITIALISATION DU ROUTER
   const { showError } = useError()
   const [pickerOpen, setPickerOpen] = useState(false)
   const [country, setCountry] = useState(COUNTRIES.find(c => c.cca2 === 'FR') || COUNTRIES[0])
@@ -186,18 +187,22 @@ export default function EnterPhoneScreen({ navigation }) {
         const token = await getToken(user.phoneNumber)
         if (!token) return setCheckingSession(false)
         const resMe = await me(token)
-        if (resMe?.id) navigation.reset({ index: 0, routes: [{ name: 'Home' }] })
-        else setCheckingSession(false)
+        
+        // 4. CORRECTION NAVIGATION: reset -> replace
+        if (resMe?.id) {
+          router.replace('/(tabs)') // Redirige vers l'accueil (tes tabs)
+        } else {
+          setCheckingSession(false)
+        }
       } catch (e) {
         console.log('[SESSION CHECK]', e.message)
         setCheckingSession(false)
       }
     })()
-  }, [navigation])
+  }, [router]) // Ajout de router dans les dépendances
 
   useEffect(() => {
     let v = nsn.replace(/\D+/g, '')
-    // Supprime le 0 initial pour la France uniquement
     if (country.cca2 === 'FR') v = v.replace(/^0+/, '')
     if (v.length > country.nsnMax) v = v.slice(0, country.nsnMax)
     if (v !== nsn) setNsn(v)
@@ -222,7 +227,12 @@ export default function EnterPhoneScreen({ navigation }) {
     await awaitKeyboardHide()
     const dialCode = `+${country.callingCode}`
     const phoneDisplay = `${dialCode} ${formattedNational}`
-    navigation.navigate('LoginPin', { dialCode, nsn, phoneDisplay })
+    
+    // 5. CORRECTION NAVIGATION: navigate -> push avec params
+    router.push({
+      pathname: '/(auth)/LoginPinScreen',
+      params: { dialCode, nsn, phoneDisplay }
+    })
   }
 
   const goSignup = async () => {
@@ -231,7 +241,12 @@ export default function EnterPhoneScreen({ navigation }) {
     await awaitKeyboardHide()
     const dialCode = `+${country.callingCode}`
     const phoneDisplay = `${dialCode} ${formattedNational}`
-    navigation.navigate('ChooseTag', { dialCode, nsn, phoneDisplay })
+    
+    // 6. CORRECTION NAVIGATION: navigate -> push avec params
+    router.push({
+      pathname: '/(auth)/ChooseTagScreen',
+      params: { dialCode, nsn, phoneDisplay }
+    })
   }
 
   if (checkingSession) {
@@ -247,6 +262,8 @@ export default function EnterPhoneScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+      {/* 7. CORRECTION HEADER: onBack personnalisé n'est souvent pas nécessaire si router.back() est utilisé par défaut, 
+          mais ici undefined est OK si HeaderBar gère le cas, sinon utilise router.back() */}
       <HeaderBar title="" onBack={undefined} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>

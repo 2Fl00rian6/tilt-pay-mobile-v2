@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import HeaderBar from '../components/HeaderBar';
-import PinDots from '../components/PinDots';
-import Keypad from '../components/Keypad';
-import { useError } from '../context/ErrorContext';
-import { login, me } from '../api/auth';
-import { setToken, setUser, setCurrentPhone } from '../utils/authStorage';
+import { useRouter, useLocalSearchParams } from 'expo-router'; // <--- IMPORT IMPORTANT
+
+import HeaderBar from '../../components/HeaderBar'; // Attention aux chemins relatifs (../..)
+import PinDots from '../../components/PinDots';
+import Keypad from '../../components/Keypad';
+import { useError } from '../../context/ErrorContext';
+import { login, me } from '../../api/auth';
+import { setToken, setUser, setCurrentPhone } from '../../utils/authStorage';
 
 const PIN_LEN = 4;
 
-export default function LoginPinScreen({ route, navigation }) {
+export default function LoginPinScreen() {
+  const router = useRouter(); // <--- Hook de navigation
+  const params = useLocalSearchParams(); // <--- Pour récupérer les paramètres
   const { showError } = useError();
 
-  const dialCode = route?.params?.dialCode || '+33';
-  const nsn = route?.params?.nsn || '';
-  const phoneDisplay = route?.params?.phoneDisplay || `${dialCode} ${nsn}`;
+  const dialCode = params.dialCode || '+33';
+  const nsn = params.nsn || '';
+  const phoneDisplay = params.phoneDisplay || `${dialCode} ${nsn}`;
   const phoneNumber = `${dialCode}${nsn}`;
 
   const [pin, setPin] = useState('');
@@ -32,6 +36,7 @@ export default function LoginPinScreen({ route, navigation }) {
         const res = await login({ phoneNumber, pin });
         const token = res?.access_token;
         if (!token) throw new Error('Missing access_token');
+        
         const resMe = await me(token);
         await setToken(phoneNumber, token);
         await setUser({
@@ -43,7 +48,10 @@ export default function LoginPinScreen({ route, navigation }) {
           createdAt: resMe.createdAt,
         });
         await setCurrentPhone(phoneNumber);
-        navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+
+        // --- CORRECTION ICI ---
+        // On remplace la route actuelle par l'accueil (probablement tes tabs)
+        router.replace('/(tabs)'); 
       } catch (e) {
         showError(e?.text || e?.message || 'Login failed', { position: 'top' });
         setPin('');
@@ -51,11 +59,12 @@ export default function LoginPinScreen({ route, navigation }) {
         setSending(false);
       }
     })();
-  }, [pin, phoneNumber, navigation, showError]);
+  }, [pin, phoneNumber, router, showError]); // Ajout de router aux dépendances
 
   return (
     <SafeAreaView style={styles.safe}>
-      <HeaderBar title="" onBack={() => navigation.goBack()} />
+      {/* router.back() remplace navigation.goBack() */}
+      <HeaderBar title="" onBack={() => router.back()} />
       <View style={styles.container}>
         <View style={styles.handleWrap}><View style={styles.handle} /></View>
 
@@ -82,10 +91,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff', paddingTop: 8 },
   handleWrap: { alignItems: 'center', marginBottom: 16 },
   handle: { width: 36, height: 4, backgroundColor: '#D1D5DB', borderRadius: 2 },
-
   title: { fontSize: 20, lineHeight: 28, fontWeight:'600', color:'#111827', marginBottom: 8 },
   subtitle: { fontSize: 14, lineHeight: 20, color:'#6B7280' },
-
   dotsWrap: { alignItems: 'center', marginTop: 24 },
   kpWrap: { paddingBottom: 8 },
 });

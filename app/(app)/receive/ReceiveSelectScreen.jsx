@@ -7,11 +7,11 @@ import {
   Animated,
   Easing,
 } from 'react-native'
-import HeaderBar from '../components/HeaderBar'
+import HeaderBar from '../../../components/HeaderBar'
 import * as Haptics from 'expo-haptics'
 
-import IconTag from '../assets/icon-user.svg'
-import IconNfc from '../assets/icon-nfc.svg'
+import IconTag from '../../../assets/icon-user.svg'
+import IconNfc from '../../../assets/icon-nfc.svg'
 
 export default function ReceiveSelectScreen({ navigation }) {
   const fadeAnim = useRef(new Animated.Value(0)).current

@@ -2,8 +2,8 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import HeaderBar from '../components/HeaderBar';
-import { useError } from '../context/ErrorContext';
+import HeaderBar from '../../components/HeaderBar';
+import { useError } from '../../context/ErrorContext';
 
 export default function ChooseTagScreen({ route, navigation }) {
   const { showError } = useError();

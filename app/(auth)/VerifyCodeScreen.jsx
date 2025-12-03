@@ -4,9 +4,9 @@ import {
   KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import HeaderBar from '../components/HeaderBar';
-import { useError } from '../context/ErrorContext';
-import { verifyAccount } from '../api/auth';
+import HeaderBar from '../../components/HeaderBar';
+import { useError } from '../../context/ErrorContext';
+import { verifyAccount } from '../../api/auth';
 
 const CODE_LEN = 6;
 

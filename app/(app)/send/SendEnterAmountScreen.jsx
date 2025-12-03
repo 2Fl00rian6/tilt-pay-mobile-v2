@@ -9,7 +9,7 @@ import {
   Animated,
   Easing,
 } from 'react-native'
-import HeaderBar from '../components/HeaderBar'
+import HeaderBar from '../../../components/HeaderBar'
 import { Svg, Path } from 'react-native-svg'
 import * as Haptics from 'expo-haptics'
 

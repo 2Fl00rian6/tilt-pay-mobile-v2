@@ -2,11 +2,11 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import HeaderBar from '../components/HeaderBar';
-import PinDots from '../components/PinDots';
-import Keypad from '../components/Keypad';
-import { useError } from '../context/ErrorContext';
-import { createAccount } from '../api/auth';
+import HeaderBar from '../../components/HeaderBar';
+import PinDots from '../../components/PinDots';
+import Keypad from '../../components/Keypad';
+import { useError } from '../../context/ErrorContext';
+import { createAccount } from '../../api/auth';
 
 const PIN_LEN = 4;
 

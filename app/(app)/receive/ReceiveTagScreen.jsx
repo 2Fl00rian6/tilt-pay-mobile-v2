@@ -9,7 +9,7 @@ import {
   Share,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import HeaderBar from '../components/HeaderBar'
+import HeaderBar from '../../../components/HeaderBar'
 import * as Haptics from 'expo-haptics'
 import { Svg, Path, Rect } from 'react-native-svg'
 

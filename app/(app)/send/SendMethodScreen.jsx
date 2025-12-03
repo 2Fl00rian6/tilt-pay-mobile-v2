@@ -8,13 +8,13 @@ import {
   Animated,
   Easing,
 } from 'react-native'
-import HeaderBar from '../components/HeaderBar'
+import HeaderBar from '../../../components/HeaderBar'
 import * as Haptics from 'expo-haptics'
 
 /* ---------- Icônes SVG ---------- */
-import IconTag from '../assets/icon-user.svg'
-import IconNfc from '../assets/icon-nfc.svg'
-import IconBank from '../assets/icon-bank.svg'
+import IconTag from '../../../assets/icon-user.svg'
+import IconNfc from '../../../assets/icon-nfc.svg'
+import IconBank from '../../../assets/icon-bank.svg'
 
 export default function SendMethodScreen({ navigation, route }) {
   const amount = route?.params?.amount

@@ -115,10 +115,12 @@ const styles = StyleSheet.create({
     borderRadius: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+    // CHANGE ICI : 'transparent' -> une couleur visible (gris clair)
+    backgroundColor: '#F3F4F6', 
   },
   keyPressed: {
-    backgroundColor: '#F3F4F6',
+    // On fonce un peu la couleur quand on appuie
+    backgroundColor: '#E5E7EB', 
   },
   keyText: {
     fontSize: 28,

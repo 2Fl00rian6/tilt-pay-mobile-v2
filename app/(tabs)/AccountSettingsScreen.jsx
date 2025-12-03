@@ -9,9 +9,9 @@ import {
   Easing,
 } from 'react-native'
 import * as Haptics from 'expo-haptics'
-import HeaderBar from '../components/HeaderBar'
+import HeaderBar from '../../components/HeaderBar'
 import { Svg, Path } from 'react-native-svg'
-import { wipeAllLocalData } from '../utils/authStorage'
+import { wipeAllLocalData } from '../../utils/authStorage'
 
 /* ---------- Icônes ---------- */
 const IconChat = ({ size = 20, color = '#111' }) => (
