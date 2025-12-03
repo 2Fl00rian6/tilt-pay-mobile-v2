@@ -1,4 +1,5 @@
 import * as Haptics from 'expo-haptics'
+import { useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'
 import {
   Animated,
@@ -9,7 +10,6 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import HeaderBar from '../components/HeaderBar'
-import { useRouter } from 'expo-router'
 
 /* ---------- Icônes SVG ---------- */
 import IconBank from '../assets/icon-bank.svg'
@@ -58,21 +58,21 @@ export default function SendMethodScreen({ navigation, route }) {
 
   const goTag = async () => {
     await vibrate()
-    navigation.navigate('SendTag', { amount })
+    router.push('SendTag', { amount })
   }
 
   const goTapToPay = async () => {
     await vibrate()
     if (typeof amount === 'number') {
-      navigation.navigate('SendTapToPay', { amount, currency: 'EUR' })
+      router.push('SendTapToPay', { amount, currency: 'EUR' })
     } else {
-      navigation.navigate('SendEnterAmount')
+      router.push('SendEnterAmount')
     }
   }
 
   const goBank = async () => {
     await vibrate()
-    navigation.navigate('SendBankTransfer', { amount })
+    router.push('SendBankTransfer', { amount })
   }
 
   return (
@@ -170,5 +170,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 14,
   },
-  rowText: { fontSize: 16, color: '#48484A', fontWeight: '500' },
+  rowText: { fontSize: 16, color: '#48484A', backgroundColor: 'transparent', fontWeight: '500' },
 })

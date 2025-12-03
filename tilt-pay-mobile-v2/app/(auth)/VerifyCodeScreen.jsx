@@ -41,7 +41,7 @@ export default function VerifyCodeScreen({ route, navigation }) {
   }, []);
 
   const goBackToPhone = useCallback(() => {
-    navigation.replace('EnterPhone');
+    router.replace('EnterPhone');
   }, [navigation]);
 
   const onContinue = async () => {
@@ -51,7 +51,7 @@ export default function VerifyCodeScreen({ route, navigation }) {
     }
     try {
       await verifyAccount({ phoneNumber: phoneE164, token: code });
-      navigation.replace('LoginPin', { dialCode, nsn });
+      router.replace('LoginPin', { dialCode, nsn });
     } catch (e) {
       showError(e?.text || e?.message || 'Verification failed', { position: 'top' });
     }

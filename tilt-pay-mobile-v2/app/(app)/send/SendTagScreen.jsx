@@ -1,21 +1,21 @@
 import * as Haptics from 'expo-haptics'
+import { useRouter } from 'expo-router'
 import { useEffect, useRef, useState } from 'react'
 import {
-  ActivityIndicator,
-  Animated,
-  Easing,
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Animated,
+    Easing,
+    FlatList,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Circle, Path, Svg } from 'react-native-svg'
 import { getUsers } from '../api/users'
 import HeaderBar from '../components/HeaderBar'
-import { useRouter } from 'expo-router'
 
 const IconSearch = ({ size = 20, color = '#6B7280' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -92,7 +92,7 @@ export default function SendTagScreen({ navigation }) {
   const handleSelectUser = async (tagname) => {
     if (!tagname) return
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    navigation.navigate('SendEnterAmount', { tag: tagname })
+    router.push('SendEnterAmount', { tag: tagname })
   }
 
   const handleBack = async () => {
@@ -202,7 +202,6 @@ export default function SendTagScreen({ navigation }) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#fff' },
   container: { flex: 1, paddingHorizontal: 24, paddingTop: 20 },
-  
   searchContainer: {
     backgroundColor: '#F3F4F6',
     borderRadius: 12,
@@ -217,7 +216,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#111827',
   },
-  
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
@@ -228,7 +226,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
   },
-  
   errorContainer: {
     flex: 1,
     alignItems: 'center',
@@ -252,7 +249,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 15,
   },
-  
   sectionTitle: { 
     marginTop: 32, 
     marginBottom: 16,
@@ -262,11 +258,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
-  
   listContent: {
     paddingBottom: 24,
   },
-  
   userItem: {
     backgroundColor: '#F9FAFB',
     paddingVertical: 14,
@@ -276,7 +270,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#F3F4F6',
   },
-  
   userRow: {
     flexDirection: 'row',
     alignItems: 'center',

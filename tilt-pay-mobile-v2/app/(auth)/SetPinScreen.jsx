@@ -60,7 +60,7 @@ export default function SetPinScreen({ route, navigation }) {
         await createAccount({ phoneNumber, fullName, tagName, pin });
 
         // Succès: l'API envoie un SMS → on va sur VerifyCode
-        navigation.replace('VerifyCode', {
+        router.replace('VerifyCode', {
           mode: 'register',
           dialCode,
           nsn,
@@ -73,7 +73,7 @@ export default function SetPinScreen({ route, navigation }) {
         // Si l’utilisateur existe déjà, on redirige vers l’écran de login PIN
         if (e?.redirectTo === 'login' || e?.status === 409) {
           setTimeout(() => {
-            navigation.replace('LoginPin', { dialCode, nsn });
+            router.replace('LoginPin', { dialCode, nsn });
           }, 500);
         } else {
           // Sinon on ré-initialise le flux de création

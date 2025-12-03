@@ -14,7 +14,6 @@ import { Svg, Path } from 'react-native-svg'
 import { wipeAllLocalData } from '../../utils/authStorage'
 import { useRouter } from 'expo-router'
 
-/* ---------- Icônes ---------- */
 const IconChat = ({ size = 20, color = '#111' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path
@@ -68,12 +67,12 @@ export default function AccountSettingsScreen({ navigation }) {
   const onLogout = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     await wipeAllLocalData()
-    navigation.reset({ index: 0, routes: [{ name: 'EnterPhone' }] })
+    router.replace('EnterPhone')
   }
 
   const onSupport = async () => {
     await Haptics.selectionAsync()
-    navigation.navigate('Support')
+    router.push('Support')
   }
 
   return (
@@ -86,7 +85,6 @@ export default function AccountSettingsScreen({ navigation }) {
 
         <Text style={styles.title}>Settings</Text>
 
-        {/* Currency */}
         <View style={styles.rowBetween}>
           <Text style={styles.label}>Default currency</Text>
           <TouchableOpacity
@@ -100,13 +98,11 @@ export default function AccountSettingsScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {/* Support */}
         <TouchableOpacity style={styles.row} onPress={onSupport} activeOpacity={0.8}>
           <IconChat size={20} color="#111" />
           <Text style={styles.rowText}>Support</Text>
         </TouchableOpacity>
 
-        {/* Logout */}
         <TouchableOpacity style={styles.row} onPress={onLogout} activeOpacity={0.8}>
           <IconLogout size={20} color="#111" />
           <Text style={styles.rowText}>Log out</Text>
@@ -116,7 +112,6 @@ export default function AccountSettingsScreen({ navigation }) {
   )
 }
 
-/* ---------- Styles ---------- */
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#fff' },
   container: { flex: 1, backgroundColor: '#fff', paddingTop: 8 },

@@ -1,18 +1,18 @@
 import * as Haptics from 'expo-haptics'
+import { useRouter } from 'expo-router'
 import { useEffect, useRef, useState } from 'react'
 import {
-  Animated,
-  Easing,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Animated,
+    Easing,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Path, Svg } from 'react-native-svg'
 import HeaderBar from '../components/HeaderBar'
 import { wipeAllLocalData } from '../utils/authStorage'
-import { useRouter } from 'expo-router'
 
 /* ---------- Icônes ---------- */
 const IconChat = ({ size = 20, color = '#111' }) => (
@@ -68,12 +68,12 @@ export default function AccountSettingsScreen({ navigation }) {
   const onLogout = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     await wipeAllLocalData()
-    navigation.reset({ index: 0, routes: [{ name: 'EnterPhone' }] })
+    router.replace('EnterPhone')
   }
 
   const onSupport = async () => {
     await Haptics.selectionAsync()
-    navigation.navigate('Support')
+    router.push('Support')
   }
 
   return (

@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingHorizontal: 20,
     paddingVertical: 14,
-    backgroundColor: '#F9FAFB', // <--- Changé 'transparent' pour voir le bouton
+    backgroundColor: 'transparent',
     borderRadius: 14,
     marginHorizontal: 16,
     marginBottom: 14,

@@ -52,12 +52,12 @@ export default function ReceiveSelectScreen({ navigation }) {
 
   const goTag = async () => {
     await vibrate()
-    navigation.navigate('ReceiveTag')
+    router.push('ReceiveTag')
   }
 
   const goTapToPay = async () => {
     await vibrate()
-    navigation.navigate('ReceiveTapToPay')
+    router.push('ReceiveTapToPay')
   }
 
   return (

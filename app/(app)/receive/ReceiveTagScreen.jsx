@@ -56,13 +56,11 @@ export default function ReceiveTagScreen() {
 
   const handleCopy = async () => {
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-    
-    // Si vous avez installé expo-clipboard :
     try {
       await Clipboard.setStringAsync(userTag)
-      Alert.alert('Succès', 'Tag copié !')
+      //Alert.alert('Succès', 'Tag copié !')
     } catch (e) {
-      Alert.alert('Copié', 'Tag copié (simulation)')
+      //Alert.alert('Copié', 'Tag copié (simulation)')
     }
   }
 

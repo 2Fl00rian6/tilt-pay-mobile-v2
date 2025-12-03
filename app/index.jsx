@@ -1,7 +1,7 @@
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import { getToken } from '../utils/authStorage'; // Vérifie tes imports
+import { getToken } from '../utils/authStorage';
 
 export default function Index() {
   const [loading, setLoading] = useState(true);
@@ -13,8 +13,6 @@ export default function Index() {
 
   const checkLogin = async () => {
     try {
-      // Logique simple : on regarde s'il y a un token stocké
-      // Tu devras peut-être adapter getToken selon ton implémentation (s'il prend des arguments)
       const token = await getToken(); 
       setHasToken(!!token);
     } catch (e) {
@@ -32,7 +30,5 @@ export default function Index() {
     );
   }
 
-  // Si connecté -> Vers les Tabs
-  // Sinon -> Vers l'authentification (écran EnterPhone par exemple)
   return <Redirect href={hasToken ? "/(tabs)" : "/(auth)/EnterPhoneScreen"} />;
 }

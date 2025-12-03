@@ -1,10 +1,10 @@
 // src/screens/ChooseTagScreen.jsx
+import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HeaderBar from '../components/HeaderBar';
 import { useError } from '../context/ErrorContext';
-import { useRouter } from 'expo-router'
 
 export default function ChooseTagScreen({ route, navigation }) {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function ChooseTagScreen({ route, navigation }) {
   const goNext = () => {
     if (!validChain) {
       showError('Phone number not found, please re-enter it.', { position: 'top' });
-      navigation.replace('EnterPhone');
+      router.replace('EnterPhone');
       return;
     }
     if (fullName.trim().length < 2) {
@@ -38,7 +38,7 @@ export default function ChooseTagScreen({ route, navigation }) {
       return;
     }
     // IMPORTANT : on renvoie dialCode & nsn SANS LES MODIFIER
-    navigation.navigate('SetPin', {
+    router.push('SetPin', {
       dialCode,
       nsn,
       phoneDisplay,

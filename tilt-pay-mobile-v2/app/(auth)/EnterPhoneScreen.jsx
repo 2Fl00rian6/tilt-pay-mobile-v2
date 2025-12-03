@@ -1,15 +1,23 @@
-import { useMemo, useRef, useState, useEffect } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  View, Text, TextInput, TouchableOpacity, StyleSheet,
-  KeyboardAvoidingView, Platform, Modal, FlatList, Animated,
-  TouchableWithoutFeedback, Keyboard, ActivityIndicator,
+    ActivityIndicator,
+    Animated,
+    FlatList,
+    Keyboard,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    StyleSheet,
+    Text, TextInput, TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import allCountries from 'world-countries'
+import { me } from '../api/auth'
 import HeaderBar from '../components/HeaderBar'
 import { useError } from '../context/ErrorContext'
-import { me } from '../api/auth'
 import { getToken, getUser } from '../utils/authStorage'
-import allCountries from 'world-countries'
 
 const COUNTRIES = allCountries.map((c) => {
   const base = {
@@ -186,7 +194,7 @@ export default function EnterPhoneScreen({ navigation }) {
         const token = await getToken(user.phoneNumber)
         if (!token) return setCheckingSession(false)
         const resMe = await me(token)
-        if (resMe?.id) navigation.reset({ index: 0, routes: [{ name: 'Home' }] })
+        if (resMe?.id) router.replace({ index: 0, routes: [{ name: 'Home' }] })
         else setCheckingSession(false)
       } catch (e) {
         console.log('[SESSION CHECK]', e.message)
@@ -222,7 +230,7 @@ export default function EnterPhoneScreen({ navigation }) {
     await awaitKeyboardHide()
     const dialCode = `+${country.callingCode}`
     const phoneDisplay = `${dialCode} ${formattedNational}`
-    navigation.navigate('LoginPin', { dialCode, nsn, phoneDisplay })
+    router.push('LoginPin', { dialCode, nsn, phoneDisplay })
   }
 
   const goSignup = async () => {
@@ -231,7 +239,7 @@ export default function EnterPhoneScreen({ navigation }) {
     await awaitKeyboardHide()
     const dialCode = `+${country.callingCode}`
     const phoneDisplay = `${dialCode} ${formattedNational}`
-    navigation.navigate('ChooseTag', { dialCode, nsn, phoneDisplay })
+    router.push('ChooseTag', { dialCode, nsn, phoneDisplay })
   }
 
   if (checkingSession) {

@@ -20,7 +20,6 @@ import { useRouter } from 'expo-router';
 
 const screenWidth = Dimensions.get('window').width;
 
-/* ---------- Icônes ---------- */
 const IconUser = ({ size = 22, color = '#111' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path d="M20 21a8 8 0 0 0-16 0" stroke={color} strokeWidth="1.8" strokeLinecap="round" />
@@ -49,7 +48,6 @@ const IconArrowUpRight = ({ size = 18, color = '#fff' }) => (
   </Svg>
 );
 
-/* ---------- Main Screen ---------- */
 export default function HomeScreen({ navigation, route }) {
   const { showError } = useError();
   const tagFromParams = route?.params?.tagName;
@@ -174,7 +172,6 @@ export default function HomeScreen({ navigation, route }) {
     fetchData();
   }, [fetchData]);
 
-  /* ---------- Haptics ---------- */
   async function vibrate() {
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -183,7 +180,6 @@ export default function HomeScreen({ navigation, route }) {
     }
   }
 
-  /* ---------- Copier le tag ---------- */
   async function onCopyTag() {
     try {
       if (!tag) {
@@ -199,11 +195,9 @@ export default function HomeScreen({ navigation, route }) {
     }
   }
 
-  /* ---------- UI ---------- */
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
-        {/* Header */}
         <View style={styles.headerRow}>
           <View style={{ width: 28 }} />
           <TouchableOpacity onPress={() => router.push('/AccountSettingsScreen')} style={styles.profileBtn}>
@@ -211,7 +205,6 @@ export default function HomeScreen({ navigation, route }) {
           </TouchableOpacity>
         </View>
 
-        {/* Tag */}
         <View style={styles.tagRow}>
           <Text style={styles.tagText}>tag: {tag || 'user'}</Text>
           <TouchableOpacity onPress={onCopyTag} style={styles.copyBtn} activeOpacity={0.8}>
@@ -219,14 +212,12 @@ export default function HomeScreen({ navigation, route }) {
           </TouchableOpacity>
         </View>
 
-        {/* Balance */}
         {loadingBalance ? (
           <Animated.View style={[styles.skeleton, { backgroundColor: shimmerBg, alignSelf: 'center' }]} />
         ) : (
           <Text style={styles.balanceText}>${balance.toFixed(2)}</Text>
         )}
 
-        {/* Add funds */}
         <TouchableOpacity
           style={styles.addBtn}
           onPress={() => router.push('/AddFundsScreen')}
@@ -236,7 +227,6 @@ export default function HomeScreen({ navigation, route }) {
           <IconPlus size={14} color="#111" />
         </TouchableOpacity>
 
-        {/* Transactions */}
         <Text style={styles.sectionTitle}>Transactions</Text>
 
         {loading ? (
@@ -287,7 +277,6 @@ export default function HomeScreen({ navigation, route }) {
           </Animated.View>
         )}
 
-        {/* Bottom actions */}
         <View style={styles.bottomBar}>
           <TouchableOpacity
             style={[styles.bigBtn, styles.bigBtnDark]}
@@ -316,7 +305,6 @@ export default function HomeScreen({ navigation, route }) {
   );
 }
 
-/* ---------- Styles ---------- */
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#fff' },
   container: { flex: 1, backgroundColor: '#fff' },

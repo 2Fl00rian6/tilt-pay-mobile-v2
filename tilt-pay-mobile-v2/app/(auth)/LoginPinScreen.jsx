@@ -45,7 +45,7 @@ export default function LoginPinScreen({ route, navigation }) {
           createdAt: resMe.createdAt,
         });
         await setCurrentPhone(phoneNumber);
-        navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+        router.replace('/Home');
       } catch (e) {
         showError(e?.text || e?.message || 'Login failed', { position: 'top' });
         setPin('');

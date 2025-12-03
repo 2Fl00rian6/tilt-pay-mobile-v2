@@ -76,13 +76,13 @@ function Key({ label, onPress }) {
 }
 
 export default function SendEnterAmountScreen({ route, navigation }) {
-  const router = useRouter()
   const currency = route?.params?.currency ?? 'USD'
   const currencySymbol = useMemo(() => {
     if (currency === 'EUR') return '€'
     if (currency === 'GBP') return '£'
     return '$'
   }, [currency])
+  const router = useRouter()
 
   const [val, setVal] = useState('0')
 
@@ -158,9 +158,9 @@ export default function SendEnterAmountScreen({ route, navigation }) {
     const tag = route?.params?.tag
 
     if (tag) {
-      navigation.navigate('ConfirmTagTransfer', { tag, amount: amountNumber, currency })
+      router.push('ConfirmTagTransfer', { tag, amount: amountNumber, currency })
     } else {
-      navigation.navigate('SendTapToPay', { amount: amountNumber, currency })
+      router.push('SendTapToPay', { amount: amountNumber, currency })
     }
   }
   const rows = [

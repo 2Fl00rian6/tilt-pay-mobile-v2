@@ -92,7 +92,10 @@ export default function SendTagScreen({ navigation }) {
   const handleSelectUser = async (tagname) => {
     if (!tagname) return
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    router.push('/(app)/send/SendEnterAmountScreen', { tag: tagname })
+    router.push({
+      pathname: '/(app)/send/SendEnterAmountScreen',
+      params: { tag: tagname }
+    })
   }
 
   const handleBack = async () => {

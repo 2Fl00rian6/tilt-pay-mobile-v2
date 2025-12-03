@@ -12,7 +12,7 @@ import {
 import HeaderBar from '../../../components/HeaderBar'
 import { Svg, Path } from 'react-native-svg'
 import * as Haptics from 'expo-haptics'
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 
 const IconBackspace = ({ size = 22, color = '#111' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -75,14 +75,18 @@ function Key({ label, onPress }) {
   )
 }
 
-export default function SendEnterAmountScreen({ route, navigation }) {
-  const currency = route?.params?.currency ?? 'USD'
+export default function SendEnterAmountScreen() {
+  const router = useRouter()
+  const params = useLocalSearchParams()
+  
+  const currency = params.currency || 'USD'
+  const tag = params.tag
+
   const currencySymbol = useMemo(() => {
     if (currency === 'EUR') return '€'
     if (currency === 'GBP') return '£'
     return '$'
   }, [currency])
-  const router = useRouter()
 
   const [val, setVal] = useState('0')
 
@@ -152,17 +156,24 @@ export default function SendEnterAmountScreen({ route, navigation }) {
   }
 
   const handleContinue = async () => {
-    if (amountNumber <= 0) return
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+      if (amountNumber <= 0) return
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
 
-    const tag = route?.params?.tag
-
-    if (tag) {
-      router.push('/(app)/send/ConfirmTagTransferScreen', { tag, amount: amountNumber, currency })
-    } else {
-      router.push('/(app)/send/SendTapToPayScreen', { amount: amountNumber, currency })
+      if (tag) {
+        // ✅ CELA MARCHERA UNE FOIS LE FICHIER CRÉÉ
+        router.push({
+          pathname: '/send/ConfirmTagTransferScreen', 
+          params: { tag, amount: amountNumber, currency }
+        })
+      } else {
+        // ✅ CELA DOIT DÉJÀ MARCHER (car SendTapToPayScreen.jsx existe)
+        router.push({
+          pathname: '/send/SendTapToPayScreen',
+          params: { amount: amountNumber, currency }
+        })
+      }
     }
-  }
+
   const rows = [
     ['1', '2', '3'],
     ['4', '5', '6'],

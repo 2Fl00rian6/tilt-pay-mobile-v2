@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import HeaderBar from '../../components/HeaderBar';
 import { useError } from '../../context/ErrorContext';
 import { verifyAccount } from '../../api/auth';
+import { router } from 'expo-router';
 
 const CODE_LEN = 6;
 
@@ -19,6 +20,7 @@ export default function VerifyCodeScreen({ route, navigation }) {
   const nsn = route?.params?.nsn || '';
   const phoneDisplay = route?.params?.phoneDisplay || `${dialCode}${nsn}`;
   const phoneE164 = `${dialCode}${nsn}`;
+  const router = useRouter();
 
   const [code, setCode] = useState('');
 
@@ -39,8 +41,8 @@ export default function VerifyCodeScreen({ route, navigation }) {
   }, []);
 
   const goBackToPhone = useCallback(() => {
-    navigation.replace('EnterPhone');
-  }, [navigation]);
+    router.replace('EnterPhone');
+  }, [router]);
 
   const onContinue = async () => {
     if (code.length !== CODE_LEN) {
@@ -49,7 +51,7 @@ export default function VerifyCodeScreen({ route, navigation }) {
     }
     try {
       await verifyAccount({ phoneNumber: phoneE164, token: code });
-      navigation.replace('LoginPin', { dialCode, nsn });
+      router.replace('LoginPin', { dialCode, nsn });
     } catch (e) {
       showError(e?.text || e?.message || 'Verification failed', { position: 'top' });
     }

@@ -3,7 +3,6 @@ import { Stack } from 'expo-router';
 export default function HomeLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      {/* L'écran principal (ton Dashboard) */}
         <Stack.Screen
             name="index"
             options={{ 
@@ -13,11 +12,10 @@ export default function HomeLayout() {
             }}
         />
 
-      {/* L'écran de paramètres, qui s'ouvrira par-dessus comme une nouvelle page */}
       <Stack.Screen 
         name="AccountSettingsScreen" 
         options={{ 
-          headerShown: false, // On affiche le header (titre + flèche retour) pour cette page
+          headerShown: false,
           title: 'Mon Compte',
           headerBackTitle: 'Retour'
         }} 
