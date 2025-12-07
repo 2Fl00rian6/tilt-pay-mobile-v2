@@ -1,10 +1,9 @@
-import { useLocalSearchParams, useRouter } from 'expo-router'; // <--- IMPORT IMPORTANT
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { login, me } from '../../api/auth';
-import HeaderBar from '../../components/HeaderBar'; // Attention aux chemins relatifs (../..)
+import HeaderBar from '../../components/HeaderBar';
 import Keypad from '../../components/Keypad';
 import PinDots from '../../components/PinDots';
 import { useError } from '../../context/ErrorContext';
@@ -13,8 +12,8 @@ import { setCurrentPhone, setToken, setUser } from '../../utils/authStorage';
 const PIN_LEN = 4;
 
 export default function LoginPinScreen() {
-  const router = useRouter(); // <--- Hook de navigation
-  const params = useLocalSearchParams(); // <--- Pour récupérer les paramètres
+  const router = useRouter(); 
+  const params = useLocalSearchParams();
   const { showError } = useError();
 
   const dialCode = params.dialCode || '+33';
@@ -48,22 +47,27 @@ export default function LoginPinScreen() {
           createdAt: resMe.createdAt,
         });
         await setCurrentPhone(phoneNumber);
-
-        // --- CORRECTION ICI ---
-        // On remplace la route actuelle par l'accueil (probablement tes tabs)
-        router.replace('/(tabs)'); 
+        router.replace('/(tabs)');
       } catch (e) {
-        showError(e?.text || e?.message || 'Login failed', { position: 'top' });
-        setPin('');
+        const errorMsg = e?.text || e?.message || '';
+
+        if (errorMsg === 'USER_NOT_VERIFIED' || errorMsg.includes('USER_NOT_VERIFIED')) {
+          router.push({
+            pathname: '/(auth)/VerifyCodeScreen',
+            params: { dialCode, nsn, phoneDisplay }
+          });
+        } else {
+          showError(errorMsg || 'Login failed', { position: 'top' });
+          setPin('');
+        }
       } finally {
         setSending(false);
       }
     })();
-  }, [pin, phoneNumber, router, showError]); // Ajout de router aux dépendances
+  }, [pin, phoneNumber, router, showError, dialCode, nsn, phoneDisplay]);
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* router.back() remplace router.back() */}
       <HeaderBar title="" onBack={() => router.back()} />
       <View style={styles.container}>
         <View style={styles.handleWrap}><View style={styles.handle} /></View>

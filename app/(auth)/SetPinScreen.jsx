@@ -1,4 +1,3 @@
-// src/screens/SetPinScreen.jsx
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,23 +6,25 @@ import HeaderBar from '../../components/HeaderBar';
 import Keypad from '../../components/Keypad';
 import PinDots from '../../components/PinDots';
 import { useError } from '../../context/ErrorContext';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 const PIN_LEN = 4;
 
-export default function SetPinScreen({ route, navigation }) {
+export default function SetPinScreen() {
   const { showError } = useError();
+  const params = useLocalSearchParams();
+  const router = useRouter();
 
-  // On reçoit dialCode (avec +) et nsn (chiffres)
-  const dialCode = route?.params?.dialCode || '+33';
-  const nsn = route?.params?.nsn || '';
-  const phoneDisplay = route?.params?.phoneDisplay || `${dialCode} ${nsn}`;
-  const phoneNumber = `${dialCode}${nsn}`; // => ex "+33XXXXXXXXX"
+  const dialCode = params.dialCode || '+33';
+  const nsn = params.nsn || '';
+  const phoneDisplay = params.phoneDisplay || `${dialCode} ${nsn}`;
+  const phoneNumber = `${dialCode}${nsn}`;
 
-  const fullName = route?.params?.fullName || 'Tilt User';
-  const tagName = route?.params?.tagName || '';
+  const fullName = params.fullName || 'Tilt User';
+  const tagName = params.tagName || '';
 
   const [pin, setPin] = useState('');
-  const [step, setStep] = useState('create'); // 'create' | 'confirm'
+  const [step, setStep] = useState('create');
   const [firstPin, setFirstPin] = useState(null);
   const [sending, setSending] = useState(false);
   const [errorTick, setErrorTick] = useState(0);
@@ -49,7 +50,6 @@ export default function SetPinScreen({ route, navigation }) {
       return;
     }
 
-    // step === 'confirm'
     (async () => {
       if (firstPin !== pin) return onMismatch();
 
@@ -57,24 +57,42 @@ export default function SetPinScreen({ route, navigation }) {
         setSending(true);
         await createAccount({ phoneNumber, fullName, tagName, pin });
 
-        // Succès: l'API envoie un SMS → on va sur VerifyCode
-        router.replace('VerifyCode', {
-          mode: 'register',
-          dialCode,
-          nsn,
-          phoneDisplay,
+        router.replace({
+          pathname: '/(auth)/VerifyCodeScreen',
+          params: {
+            mode: 'register',
+            dialCode,
+            nsn,
+            phoneDisplay,
+          }
         });
       } catch (e) {
-        // Affiche d'abord le message retourné par l'API (agrégé si 422)
-        showError(e?.text || e?.message || 'Create account failed', { position: 'top' });
+        const errorMsg = e?.text || e?.message || '';
 
-        // Si l’utilisateur existe déjà, on redirige vers l’écran de login PIN
+        if (errorMsg === 'USER_NOT_VERIFIED' || errorMsg.includes('USER_NOT_VERIFIED')) {
+          router.replace({
+            pathname: '/(auth)/VerifyCodeScreen',
+            params: {
+              mode: 'register',
+              dialCode,
+              nsn,
+              phoneDisplay,
+            }
+          });
+          return;
+        }
+
         if (e?.redirectTo === 'login' || e?.status === 409) {
+          showError('Account already exists. Please login.', { position: 'top' });
           setTimeout(() => {
-              router.replace('LoginPin', { dialCode, nsn });
+              router.replace({
+                pathname: '/(auth)/LoginPinScreen',
+                params: { dialCode, nsn, phoneDisplay }
+              });
           }, 500);
         } else {
-          // Sinon on ré-initialise le flux de création
+          showError(errorMsg || 'Create account failed', { position: 'top' });
+          
           setPin('');
           setFirstPin(null);
           setStep('create');
@@ -87,7 +105,7 @@ export default function SetPinScreen({ route, navigation }) {
     pin, step, firstPin,
     dialCode, nsn, phoneDisplay,
     fullName, tagName,
-    onMismatch, showError, navigation, phoneNumber
+    onMismatch, showError, router, phoneNumber
   ]);
 
   const title = useMemo(
@@ -125,11 +143,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff', paddingTop: 8 },
   handleWrap: { alignItems: 'center', marginBottom: 16 },
   handle: { width: 36, height: 4, backgroundColor: '#D1D5DB', borderRadius: 2 },
-
   title: { fontSize: 20, lineHeight: 28, fontWeight:'600', color:'#111827', marginBottom: 8 },
   subtitle: { fontSize: 14, lineHeight: 20, color:'#6B7280' },
-
   dotsWrap: { alignItems: 'center', marginTop: 24 },
-
   kpWrap: { paddingBottom: 8 },
 });

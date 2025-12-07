@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback, Keyboard, ActivityIndicator,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router' // <--- 1. IMPORT IMPORTANT
+import { useRouter, useLocalSearchParams } from 'expo-router' //
 
 import HeaderBar from '../../components/HeaderBar'
 import { useError } from '../../context/ErrorContext'
@@ -169,15 +169,25 @@ function awaitKeyboardHide() {
   })
 }
 
-// 2. On retire { navigation } des props car il n'est plus passé automatiquement
-export default function EnterPhoneScreen() { 
-  const router = useRouter() // <--- 3. INITIALISATION DU ROUTER
+export default function EnterPhoneScreen() {
+  const router = useRouter()
+  const params = useLocalSearchParams()
   const { showError } = useError()
   const [pickerOpen, setPickerOpen] = useState(false)
   const [country, setCountry] = useState(COUNTRIES.find(c => c.cca2 === 'FR') || COUNTRIES[0])
   const [nsn, setNsn] = useState('')
   const [checkingSession, setCheckingSession] = useState(true)
   const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (params.dialCode && params.nsn) {
+        const foundCountry = COUNTRIES.find(c => c.callingCode === params.dialCode.replace('+', ''))
+        if (foundCountry) {
+            setCountry(foundCountry)
+        }
+        setNsn(params.nsn)
+    }
+  }, [params.dialCode, params.nsn])
 
   useEffect(() => {
     (async () => {
@@ -188,9 +198,8 @@ export default function EnterPhoneScreen() {
         if (!token) return setCheckingSession(false)
         const resMe = await me(token)
         
-        // 4. CORRECTION NAVIGATION: reset -> replace
         if (resMe?.id) {
-          router.replace('/(tabs)') // Redirige vers l'accueil (tes tabs)
+          router.replace('/(tabs)')
         } else {
           setCheckingSession(false)
         }
@@ -199,7 +208,7 @@ export default function EnterPhoneScreen() {
         setCheckingSession(false)
       }
     })()
-  }, [router]) // Ajout de router dans les dépendances
+  }, [router])
 
   useEffect(() => {
     let v = nsn.replace(/\D+/g, '')
@@ -228,7 +237,6 @@ export default function EnterPhoneScreen() {
     const dialCode = `+${country.callingCode}`
     const phoneDisplay = `${dialCode} ${formattedNational}`
     
-    // 5. CORRECTION NAVIGATION: navigate -> push avec params
     router.push({
       pathname: '/(auth)/LoginPinScreen',
       params: { dialCode, nsn, phoneDisplay }
@@ -242,7 +250,6 @@ export default function EnterPhoneScreen() {
     const dialCode = `+${country.callingCode}`
     const phoneDisplay = `${dialCode} ${formattedNational}`
     
-    // 6. CORRECTION NAVIGATION: navigate -> push avec params
     router.push({
       pathname: '/(auth)/ChooseTagScreen',
       params: { dialCode, nsn, phoneDisplay }
@@ -262,8 +269,6 @@ export default function EnterPhoneScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      {/* 7. CORRECTION HEADER: onBack personnalisé n'est souvent pas nécessaire si router.back() est utilisé par défaut, 
-          mais ici undefined est OK si HeaderBar gère le cas, sinon utilise router.back() */}
       <HeaderBar title="" onBack={undefined} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>

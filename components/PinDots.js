@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Animated } from 'react-native';
-import { useTailwind } from 'tailwind-rn';
+import { View, Animated, StyleSheet } from 'react-native';
 
 export default function PinDots({ value = '', length = 4, errorTick = 0 }) {
-  const tw = useTailwind();
   const scales = useRef([...Array(length)].map(() => new Animated.Value(0))).current;
   const shake = useRef(new Animated.Value(0)).current;
 
@@ -38,14 +36,14 @@ export default function PinDots({ value = '', length = 4, errorTick = 0 }) {
   });
 
   return (
-    <Animated.View style={[tw('flex-row items-center justify-center'), { transform: [{ translateX }] }]}>
+    <Animated.View style={[styles.container, { transform: [{ translateX }] }]}>
       {Array.from({ length }).map((_, i) => (
-        <View key={i} style={tw('mx-3')}>
-          <View style={tw('w-4 h-4 rounded-full bg-gray-200')} />
+        <View key={i} style={styles.dotWrapper}>
+          <View style={styles.dotEmpty} />
           <Animated.View
             style={[
-              tw('w-4 h-4 rounded-full absolute'),
-              { backgroundColor: '#111', transform: [{ scale: scales[i] }] },
+              styles.dotFilled,
+              { transform: [{ scale: scales[i] }] },
             ]}
           />
         </View>
@@ -53,3 +51,27 @@ export default function PinDots({ value = '', length = 4, errorTick = 0 }) {
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dotWrapper: {
+    marginHorizontal: 12,
+  },
+  dotEmpty: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#E5E7EB', // gray-200
+  },
+  dotFilled: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#111',
+    position: 'absolute',
+  },
+});

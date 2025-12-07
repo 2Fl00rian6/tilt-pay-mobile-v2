@@ -1,23 +1,23 @@
-// src/screens/ChooseTagScreen.jsx
 import { useMemo, useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HeaderBar from '../../components/HeaderBar';
 import { useError } from '../../context/ErrorContext';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
-export default function ChooseTagScreen({ route, navigation }) {
+export default function ChooseTagScreen() {
   const { showError } = useError();
+  const router = useRouter();
+  const params = useLocalSearchParams();
 
-  // Ces 2 params DOIVENT arriver depuis EnterPhoneScreen
-  const dialCode = route?.params?.dialCode; // ex: "+33"
-  const nsn      = route?.params?.nsn;      // ex: "68562749"
-  const phoneDisplay = route?.params?.phoneDisplay || (dialCode && nsn ? `${dialCode} ${nsn}` : '');
-  const mode = route?.params?.mode || 'register';
+  const dialCode = params.dialCode;
+  const nsn      = params.nsn;
+  const phoneDisplay = params.phoneDisplay || (dialCode && nsn ? `${dialCode} ${nsn}` : '');
+  const mode = params.mode || 'register';
 
   const [fullName, setFullName] = useState('');
   const [tagName, setTagName]   = useState('');
 
-  // Si on arrive sans nsn ou sans dialCode, on ne peut pas continuer
   const validChain = useMemo(() => typeof dialCode === 'string' && dialCode.startsWith('+') && !!nsn, [dialCode, nsn]);
   const canContinue = (fullName.trim().length >= 2) && (tagName.trim().length >= 3) && validChain;
 
@@ -35,15 +35,16 @@ export default function ChooseTagScreen({ route, navigation }) {
       showError('Please choose a tag (min 3 chars).', { position: 'top' });
       return;
     }
-    // IMPORTANT : on renvoie dialCode & nsn SANS LES MODIFIER
-    router.push('SetPin', {
-      dialCode,
-      nsn,
-      phoneDisplay,
-      fullName: fullName.trim(),
-      tagName: tagName.trim(),
-      mode,
-    });
+    router.push({
+        pathname: '/(auth)/SetPinScreen',
+        params: {
+          dialCode,
+          nsn,
+          phoneDisplay,
+          fullName: fullName.trim(),
+          tagName: tagName.trim(),
+        mode,
+      }});
   };
 
   return (

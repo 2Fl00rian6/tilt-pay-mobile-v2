@@ -7,18 +7,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import HeaderBar from '../../components/HeaderBar';
 import { useError } from '../../context/ErrorContext';
 import { verifyAccount } from '../../api/auth';
-import { router } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 const CODE_LEN = 6;
 
-export default function VerifyCodeScreen({ route, navigation }) {
+export default function VerifyCodeScreen() {
   const { showError } = useError();
   const inputRef = useRef(null);
+  const params = useLocalSearchParams();
 
-  const mode = route?.params?.mode || 'register';
-  const dialCode = route?.params?.dialCode || '+33';
-  const nsn = route?.params?.nsn || '';
-  const phoneDisplay = route?.params?.phoneDisplay || `${dialCode}${nsn}`;
+  const mode = params.mode || 'register';
+  const dialCode = params.dialCode || '+33';
+  const nsn = params.nsn || '';
+  const phoneDisplay = params.phoneDisplay || `${dialCode}${nsn}`;
   const phoneE164 = `${dialCode}${nsn}`;
   const router = useRouter();
 
@@ -41,7 +42,7 @@ export default function VerifyCodeScreen({ route, navigation }) {
   }, []);
 
   const goBackToPhone = useCallback(() => {
-    router.replace('EnterPhone');
+    router.replace({ pathname: '/(auth)/EnterPhoneScreen', params: { mode, dialCode, nsn } });
   }, [router]);
 
   const onContinue = async () => {

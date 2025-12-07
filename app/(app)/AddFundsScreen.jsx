@@ -103,8 +103,11 @@ export default function AddFundsScreen() {
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goCreditCard} activeOpacity={0.85}>
-            <IconCard width={24} height={24} />
-            <Text style={styles.rowText}>Credit Card</Text>
+            <View style={styles.icon}>
+              <IconCard width={24} height={24} />
+              <Text style={styles.rowText}>Credit Card</Text>
+            </View>
+            <Text style={styles.feeText}>2% fee</Text>
           </TouchableOpacity>
         </Animated.View>
 
@@ -118,8 +121,11 @@ export default function AddFundsScreen() {
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goBank} activeOpacity={0.85}>
-            <IconBank width={24} height={24} />
-            <Text style={styles.rowText}>Bank Transfer</Text>
+            <View style={styles.icon}>
+              <IconBank width={24} height={24} />
+              <Text style={styles.rowText}>Bank Transfer</Text>
+            </View>
+            <Text style={styles.feeText}>1% fee</Text>
           </TouchableOpacity>
         </Animated.View>
 
@@ -133,8 +139,11 @@ export default function AddFundsScreen() {
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goCrypto} activeOpacity={0.85}>
-            <IconCrypto width={24} height={24} />
-            <Text style={styles.rowText}>Crypto</Text>
+            <View style={styles.icon}>
+              <IconCrypto width={24} height={24} />
+              <Text style={styles.rowText}>Crypto</Text>
+            </View>
+            <Text style={styles.feeText}>2% fee</Text>
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
@@ -157,7 +166,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    width: 'auto',
     gap: 12,
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 14,
     backgroundColor: 'transparent',
@@ -165,5 +176,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 14,
   },
+  icon: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   rowText: { fontSize: 16, color: '#48484A', fontWeight: '500' },
+  feeText: { fontSize: 14, color: '#888', fontWeight: '400' }
 });

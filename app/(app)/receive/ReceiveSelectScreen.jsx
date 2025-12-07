@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Animated,
   Easing,
+  View
 } from 'react-native'
 import HeaderBar from '../../../components/HeaderBar'
 import * as Haptics from 'expo-haptics'
@@ -70,7 +71,7 @@ export default function ReceiveSelectScreen({ navigation }) {
           { opacity: fadeAnim, transform: [{ translateY }] },
         ]}
       >
-        <Text style={styles.title}>Select a method</Text>
+        <Text style={styles.title}>Receive money with</Text>
 
         <Animated.View
           style={{
@@ -86,8 +87,11 @@ export default function ReceiveSelectScreen({ navigation }) {
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goTag} activeOpacity={0.85}>
-            <IconTag width={22} height={22} />
-            <Text style={styles.rowText}>Receive by tag</Text>
+            <View style={styles.icon}>
+              <IconTag width={22} height={22} />
+              <Text style={styles.rowText}>Receive by tag</Text>
+            </View>
+            <Text style={styles.feeText}>free</Text>
           </TouchableOpacity>
         </Animated.View>
 
@@ -105,8 +109,11 @@ export default function ReceiveSelectScreen({ navigation }) {
           }}
         >
           <TouchableOpacity style={styles.row} onPress={goTapToPay} activeOpacity={0.85}>
-            <IconNfc width={22} height={22} />
-            <Text style={styles.rowText}>Tap to pay</Text>
+            <View style={styles.icon}>
+              <IconNfc width={22} height={22} />
+              <Text style={styles.rowText}>Tap to pay</Text>
+            </View>
+            <Text style={styles.feeText}>1% fee</Text>
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
@@ -128,7 +135,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    width: 'auto',
     gap: 12,
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 14,
     backgroundColor: 'transparent',
@@ -136,5 +145,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 14,
   },
+  icon: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   rowText: { fontSize: 16, color: '#48484A', fontWeight: '500' },
+  feeText: { fontSize: 14, color: '#888', fontWeight: '400' }
 })
